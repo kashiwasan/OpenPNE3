@@ -12,6 +12,19 @@ $(function(){
     $('#memberJoinCommunityList').show();
     $('#memberJoinCommunityListLoading').hide();
   });
+  $('#joinCommunitySearch').keyup(function(){
+    $('#memberJoinCommunityListLoading').show();
+    $('#memberJoinCommunityList').hide();
+    $('#memberKoinCommunityList').empty();
+    var keyword = $('#joinCommunitySearch').val();
+    var requestData = { member_id: <?php echo $member->getId(); ?>, keyword: keyword, apiKey: openpne.apiKey };
+    $.getJSON( openpne.apiBase + 'member/community.json', requestData, function(json) {
+      $result = $('#joinCommunityListTemplate').tmpl(json.data);
+      $('#memberJoinCommunityList').html($result);
+      $('#memberJoinCommunityList').show();
+      $('#memberJoinCommunityListLoading').hide();
+    });
+  });
 });
 </script>
 
@@ -20,6 +33,12 @@ $(function(){
   <div class="gadget_header span12"><?php echo __('%community% List', array('%community%' => $op_term['community'])) ?></div>
 </div>
 <hr class="toumei" />
+<div class="row" id="joinCommunitySearchBox">
+<div class="input-prepend span12">
+<span class="add-on"><i class="icon-search"></i></span>
+<input type="text" id="joinCommunitySearch" class="realtime-searchbox" value="" />
+</div>
+</div> 
 <div class="row hide" id="memberJoinCommunityList">
 </div>
 <div class="row" id="memberJoinCommunityListLoading" style="margin-left: 0; text-align: center;">
