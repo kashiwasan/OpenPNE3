@@ -17,6 +17,7 @@
       <?php echo link_to($nav->caption, $nav->uri, array('class' => 'btn', 'id' => sprintf('smtMenu_%1', op_url_to_id($nav->uri, true)))) ?>
       <?php endif ?>
       <?php endforeach ?>
+      <a class="btn info"><?php echo __('View this page on regular style') ?></a>
       <?php endif ?>
     </div>
   </div>
