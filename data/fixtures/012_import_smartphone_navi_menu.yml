@@ -19,25 +19,25 @@ Navigation:
       en:
         caption: "Profile"
 
-  smartphone_default_navigation_profile_edit:
+  smartphone_default_navigation_member_search:
     type: "smartphone_default"
-    uri: "@member_editProfile"
+    uri: "@member_search"
     sort_order: 20
     Translation:
       ja_JP:
-        caption: "プロフィール編集"
+        caption: "メンバー検索"
       en:
-        caption: "Edit Profile"
+        caption: "Member Search"
 
-  smartphone_default_navigation_community_all:
+  smartphone_default_navigation_community_search:
     type: "smartphone_default"
-    uri: "@community_home?id=1"
-    sort_order: 30
+    uri: "@community_search"
+    sort_order: 20
     Translation:
       ja_JP:
-        caption: "allコミュニティ"
+        caption: "コミュニティ検索"
       en:
-        caption: "all Community"
+        caption: "Community Search"
 
   smartphone_default_navigation_config:
     type: "smartphone_default"
