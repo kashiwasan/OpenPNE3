@@ -77,6 +77,11 @@ class activityActions extends opJsonApiActions
       $query->addWhere('id > ?', $request['since_id']);
     }
 
+    if (isset($request['activity_id']))
+    {
+      $query->addWhere('id = ?', $request['activity_id']);
+    }
+
     $this->activityData = $query
       ->andWhere('in_reply_to_activity_id IS NULL')
       ->execute();
@@ -141,6 +146,7 @@ class activityActions extends opJsonApiActions
 
   public function executePost(sfWebRequest $request)
   {
+    sfContext::getInstance()->getConfiguration()->loadHelpers(array('opUtil'));
     $this->forward400Unless(isset($request['body']), 'body parameter not specified.');
 
     $memberId = $this->getUser()->getMemberId();
@@ -180,7 +186,19 @@ class activityActions extends opJsonApiActions
     $options['source'] = 'API';
 
     $this->activity = Doctrine::getTable('ActivityData')->updateActivity($memberId, $body, $options);
-
+    if ($this->activity)
+    {
+      $replyActivity = Doctrine::getTable('ActivityData')->find($options['in_reply_to_activity_id']);
+      if ($replyActivity)
+      {
+        $activityMemberTo = Doctrine::getTable('Member')->find($replyActivity->getMemberId());
+        if ($activityMemberTo->getId() !== $this->getUser()->getMemberId())
+        {
+          $notifyBody = $this->getUser()->getMember()->getName() . 'さんがあなたの投稿にコメントしました。';
+          opNotificationCenter::notify($this->getUser()->getMember(), $activityMemberTo, $notifyBody, array('category' => 'other', 'url' => app_url_for('pc_frontend', 'timeline/show?id='.$replyActivity->getId())));
+        }
+      }
+    }
     $this->setTemplate('object');
   }
 
