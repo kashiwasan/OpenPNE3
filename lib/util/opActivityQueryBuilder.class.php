@@ -243,7 +243,7 @@ class opActivityQueryBuilder
       ->addWhere('is_pre = false')
       ->execute(array(), Doctrine::HYDRATE_SINGLE_SCALAR);
 
-    return $this->buildMemberQueryWithCheckRel($query, $communityMemberIds)
+      return $query
       ->addWhere('foreign_table = "community"')
       ->addWhere('foreign_id = ?', $community_id);
   }
