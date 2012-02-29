@@ -39,16 +39,6 @@ Navigation:
       en:
         caption: "Community Search"
 
-  smartphone_default_navigation_config:
-    type: "smartphone_default"
-    uri: "@member_config"
-    sort_order: 40
-    Translation:
-      ja_JP:
-        caption: "設定変更"
-      en:
-        caption: "Settings"
-
   smartphone_default_navigation_logout:
     type: "smartphone_default"
     uri: "@member_logout"
