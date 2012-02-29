@@ -321,6 +321,28 @@ class memberActions extends opMemberAction
     return parent::executeConfig($request);
   }
 
+ /**
+  * Executes search action
+  *
+  * @param opWebRequest $request a request object
+  */
+  public function executeSearch($request)
+  {
+    $this->forwardIf($request->isSmartphone(), 'member', 'smtSearch');
+
+    return parent::executeSearch($request);
+  }
+
+ /**
+  * Executes smtSearch action
+  *
+  * @param opWebRequest $request a request object
+  */
+  public function executeSmtSearch(opWebRequest $request)
+  {
+    
+  }
+
 
  /**
   * Executes invite action
