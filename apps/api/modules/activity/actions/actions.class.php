@@ -147,10 +147,11 @@ class activityActions extends opJsonApiActions
   public function executePost(sfWebRequest $request)
   {
     sfContext::getInstance()->getConfiguration()->loadHelpers(array('opUtil'));
-    $this->forward400Unless(isset($request['body']), 'body parameter not specified.');
+
+    $body = (string)$request['body'];
+    $this->forward400If($body === '', 'body parameter not specified.');
 
     $memberId = $this->getUser()->getMemberId();
-    $body = $request['body'];
     $options = array();
 
     if (isset($request['public_flag']))
