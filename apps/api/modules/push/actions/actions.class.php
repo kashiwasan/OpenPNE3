@@ -20,6 +20,7 @@ class pushActions extends opJsonApiActions
   public function executeSearch(sfWebRequest $request)
   {
     $this->notifications = $this->getNotifications();
+    krsort($this->notifications);
 
     $this->setTemplate('array');
   }
