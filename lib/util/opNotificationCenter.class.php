@@ -4,9 +4,10 @@ class opNotificationCenter
 {
   static public function notify(Member $from, Member $to, $body, array $options = null)
   {
+    sfContext::getInstance()->getConfiguration()->loadHelpers(array('I18N'));
     $notificationItem = array(
       'id' => microtime(),
-      'body' => $body,
+      'body' => __($body),
       'member_id_from' => $from->getId(),
       'created_at' => time(),
       'unread' => true,

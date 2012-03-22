@@ -20,6 +20,7 @@ class pushActions extends opJsonApiActions
   public function executeSearch(sfWebRequest $request)
   {
     $this->notifications = $this->getNotifications();
+    krsort($this->notifications);
 
     $this->setTemplate('array');
   }
@@ -68,7 +69,7 @@ class pushActions extends opJsonApiActions
     }
     else
     {
-      return $this->renderJSON(array('status' => 'error'));
+      $this->forward404('Request parameter id does not exist.');
     }
   }
 

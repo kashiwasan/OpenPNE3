@@ -7,13 +7,13 @@ $(document).ready(function(){
       if(json.status=='success')
       {
         $pushHtml = $("#pushListTemplate").tmpl(json.data);
-        $('.divlink', $pushHtml).pushLink();
 	$('.friend-accept', $pushHtml).friendLink({ buttonElement: '.friend-notify-button', ncfriendloadingElement: '#ncfriendloading', ncfriendresultmessageElement: '#ncfriendresultmessage', });
 	$('.friend-reject', $pushHtml).friendUnlink({ buttonElement: '.friend-notify-button', ncfriendloadingElement: '#ncfriendloading', ncfriendresultmessageElement: '#ncfriendresultmessage', })
         $("#pushList").html($pushHtml);
       }else{
         alert(json.message);
       }
+      $('.nclink').pushLink();
       $('#pushList').show();
       $('#pushLoading').hide();
     });
@@ -45,10 +45,16 @@ $(document).ready(function(){
       apiKey: openpne.apiKey,
       body: body_text
     };
+    if ($('#tosaka_postform_submit').attr('data-community-id'))
+    {
+      params.target = 'community';
+      params.target_id = $('#tosaka_postform_submit').attr('data-community-id');
+    }
 
     $.getJSON(openpne.apiBase + 'activity/post.json', params, function(json) {
       if (json.status == 'success') {
         body_elem.val('');
+        $(".postform").toggle();
       }
     });
   });

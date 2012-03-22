@@ -28,6 +28,11 @@ class activityActions extends opJsonApiActions
       {
         $builder->includeFriends($request['target_id'] ? $request['target_id'] : null);
       }
+      elseif ('community' === $request['target'])
+      {
+        $this->forward400Unless($request['target_id'], 'target_id parameter not specified.');
+        $builder->includeCommunity($request['target_id']);
+      }
       else
       {
         $this->forward400('target parameter is invalid.');
@@ -72,6 +77,11 @@ class activityActions extends opJsonApiActions
       $query->addWhere('id > ?', $request['since_id']);
     }
 
+    if (isset($request['activity_id']))
+    {
+      $query->addWhere('id = ?', $request['activity_id']);
+    }
+
     $this->activityData = $query
       ->andWhere('in_reply_to_activity_id IS NULL')
       ->execute();
@@ -112,12 +122,36 @@ class activityActions extends opJsonApiActions
     $this->forward('activity', 'search');
   }
 
+  public function executeCommunity(sfWebRequest $request)
+  {
+    $request['target'] = 'community';
+
+    if (isset($request['community_id']))
+    {
+      $request['target_id'] = $request['community_id'];
+      unset($request['community_id']);
+    }
+    elseif (isset($request['id']))
+    {
+      $request['target_id'] = $request['id'];
+      unset($request['id']);
+    }
+    else
+    {
+      $this->forward400('community_id parameter not specified.');
+    }
+
+    $this->forward('activity', 'search');
+  }
+
   public function executePost(sfWebRequest $request)
   {
-    $this->forward400Unless(isset($request['body']), 'body parameter not specified.');
+    sfContext::getInstance()->getConfiguration()->loadHelpers(array('opUtil'));
+
+    $body = (string)$request['body'];
+    $this->forward400If($body === '', 'body parameter not specified.');
 
     $memberId = $this->getUser()->getMemberId();
-    $body = $request['body'];
     $options = array();
 
     if (isset($request['public_flag']))
@@ -139,10 +173,33 @@ class activityActions extends opJsonApiActions
       $options['uri'] = $request['url'];
     }
 
+    if (isset($request['target']) && 'community' === $request['target'])
+    {
+      if (!isset($request['target_id']))
+      {
+        $this->forward400('target_id parameter not specified.');
+      }
+
+      $options['foreign_table'] = 'community';
+      $options['foreign_id'] = $request['target_id'];
+    }
+
     $options['source'] = 'API';
 
     $this->activity = Doctrine::getTable('ActivityData')->updateActivity($memberId, $body, $options);
-
+    if ($this->activity)
+    {
+      $replyActivity = Doctrine::getTable('ActivityData')->find($options['in_reply_to_activity_id']);
+      if ($replyActivity)
+      {
+        $activityMemberTo = Doctrine::getTable('Member')->find($replyActivity->getMemberId());
+        if ($activityMemberTo->getId() !== $this->getUser()->getMemberId())
+        {
+          $notifyBody = $this->getUser()->getMember()->getName() . 'さんがあなたの投稿にコメントしました。';
+          opNotificationCenter::notify($this->getUser()->getMember(), $activityMemberTo, $notifyBody, array('category' => 'other', 'url' => app_url_for('pc_frontend', 'timeline/show?id='.$replyActivity->getId())));
+        }
+      }
+    }
     $this->setTemplate('object');
   }
 
@@ -170,5 +227,22 @@ class activityActions extends opJsonApiActions
     $activity->delete();
 
     return $this->renderJSON(array('status' => 'success'));
+  }
+
+  public function executeMentions(sfWebRequest $request)
+  {
+    $builder = opActivityQueryBuilder::create()
+      ->setViewerId($this->getUser()->getMemberId())
+      ->includeMentions();
+
+    $query = $builder->buildQuery()
+      ->andWhere('in_reply_to_activity_id IS NULL')
+      ->andWhere('foreign_table IS NULL')
+      ->andWhere('foreign_id IS NULL')
+      ->limit(20);
+
+    $this->activityData = $query->execute();
+
+    $this->setTemplate('array');
   }
 }

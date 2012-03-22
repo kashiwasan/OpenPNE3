@@ -37,26 +37,11 @@ var openpne = '.json_encode($json, defined('JSON_PRETTY_PRINT') ? JSON_PRETTY_PR
 <?php if (opToolkit::isSecurePage()): ?>
 <?php include_partial('global/tosaka') ?>
 
-<div id="face" class="row">
-  <div class="span2">
-    <?php echo op_image_tag_sf_image($sf_user->getMember()->getImageFileName(), array('size' => '48x48')) ?>
-  </div>
-  <div class="span8">
-    <div class="row face-name"><?php echo $sf_user->getMember()->getName() ?></div>
-    <div class="row screen-name">
-      <?php $screenName = $sf_user->getMember()->getConfig('op_screen_name') ?>
-      <?php if ($screenName): ?>
-      <a href="#">@<?php echo $screenName ?></a>
-      <?php endif ?>
-    </div>
-  </div>
-  <div class="span2 center"><?php echo link_to(op_image_tag('HomeIcon.png', array('height' => '48')), '@homepage') ?></div>
-</div>
 <?php endif ?>
 
 <?php if ($sf_user->hasFlash('error')): ?>
 <div id="global-error" class="row">
-  <div class="alert-message block-message error">
+  <div class="alert alert-error">
     <?php echo __($sf_user->getFlash('error')); ?>
   </div>
 </div>
@@ -64,7 +49,7 @@ var openpne = '.json_encode($json, defined('JSON_PRETTY_PRINT') ? JSON_PRETTY_PR
 
 <?php if ($sf_user->hasFlash('notice')): ?>
 <div id="global-error" class="row">
-  <div class="alert-message block-message info">
+  <div class="alert alert-info">
     <?php echo __($sf_user->getFlash('notice')); ?>
   </div>
 </div>
@@ -72,9 +57,6 @@ var openpne = '.json_encode($json, defined('JSON_PRETTY_PRINT') ? JSON_PRETTY_PR
 
 <?php echo $sf_content ?>
 
-<div id="smt-switch" class="row" style="display: none">
-<a class="btn info"><?php echo __('View this page on regular style') ?></a>
-</div>
 
 </body>
 </html>

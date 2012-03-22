@@ -11,6 +11,11 @@
 	var _readyBound = false;
 
 	$.fn.pushLink = function(settings){
+
+		settings = $.extend({
+			isDisableRead: false,
+		}, settings);
+
 		return this.each(function(){
 			var linkUrl = $(this).attr('data-location-url');
 			var notifyId = $(this).attr('data-notify-id');
@@ -21,8 +26,16 @@
 				$(this).removeClass('hover');
 			})
 			$(this).click(function(){
-				$.getJSON( openpne.apiBase + 'push/read.json' , { 'id': notifyId, 'apiKey': openpne.apiKey }, function(d){});
-				window.location = linkUrl;
+				if ( false == settings.isDisableRead )
+                                {
+					$.getJSON( openpne.apiBase + 'push/read.json' , { 'id': notifyId, 'apiKey': openpne.apiKey }, function(d){
+						window.location = linkUrl;
+					});
+				}
+				else
+				{
+					window.location = linkUrl;
+				}
 			});
 		});
 	};
@@ -30,9 +43,9 @@
 	$.fn.friendLink = function(settings){
 		return this.each(function(){
 			$(this).click(function(){
-				$(settings.buttonElement).hide();
-				$(settings.ncfriendloadingElement).show();
-        var pushElement = $(this).parents('.push');
+				$(this).parent().find('.friend-notify-button').hide();
+				$(this).parent().find('.ncfriendloading:first').show();
+			        var pushElement = $(this).parents('.push');
 				var memberId = pushElement.attr('data-member-id');
 				var notifyId = pushElement.attr('data-notify-id');
 				$.getJSON( openpne.apiBase + 'push/read.json' , { 'id': notifyId, 'apiKey': openpne.apiKey }, function(d){});
@@ -43,12 +56,18 @@
 					dataType: 'json',
 					success: function(data) {
 						if(data.status=='success'){
-							$(settings.ncfriendloadingElement).hide();
-							$(settings.ncfriendresultmessageElement).text('フレンド申請を承認しました。');
+							$('.ncfriendloading').hide();
+							$(this).parent().find('.ncfriendresultmessage').text('フレンド申請を承認しました。');
+							$(this).parent().find('.ncfriendresultmessage').show();
 						}else{
 							alert(data.message);
 						}   
-					}
+					},
+					error: function(r, s, e){
+						$('.ncfriendloading').hide();
+						$(this).parent().find('.ncfriendresultmessage').text('既に承認済みか拒否済みです。');
+						$(this).parent().find('.ncfriendresultmessage').show(); 
+                                        }
 				});
 			});
 		});
@@ -58,9 +77,9 @@
 	$.fn.friendUnlink = function(settings){
 		return this.each(function(){
 			$(this).click(function(){
-				$(settings.buttonElement).hide();
-				$(settings.ncfriendloadingElement).show();
-        var pushElement = $(this).parents('.push');
+				$(this).parent().find('.friend-notify-button').hide();
+				$(this).parent().find('.ncfriendloading:first').show();
+			        var pushElement = $(this).parents('.push');
 				var memberId = pushElement.attr('data-member-id');
 				var notifyId = pushElement.attr('data-notify-id');
 				$.getJSON( openpne.apiBase + 'push/read.json' , { 'id': notifyId, 'apiKey': openpne.apiKey }, function(d){});
@@ -71,13 +90,18 @@
 					dataType: 'json',
 					success: function(data) {
 						if(data.status=='success'){
-							$(settings.ncfriendloadingElement).hide();
-							$(settings.ncfriendresultmessageElement).show();
-							$(settings.ncfriendresultmessageElement).text('フレンド申請を拒否しました。');
+							$('.ncfriendloading').hide();
+							$(this).parent().find('.ncfriendresultmessage').text('フレンド申請を拒否しました。');
+							$(this).parent().find('.ncfriendresultmessage').show();
 						}else{
 							alert(data.message);
 						}   
-					}
+					},
+					error: function(r, s, e){
+						$('.ncfriendloading').hide();
+						$(this).parent().find('.ncfriendresultmessage').text('既に承認済みか拒否済みです。');
+						$(this).parent().find('.ncfriendresultmessage').show(); 
+                                        }
 				});
 			});
 		});

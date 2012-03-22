@@ -7,18 +7,18 @@
 </script>
 <script type="text/javascript">
 $(function(){
-  $.getJSON( openpne.apiBase + 'member/search.json?target=friend&target_id=<?php echo $member->getId() ?>&apiKey=' + openpne.apiKey, function(json) {
+  $.getJSON( openpne.apiBase + 'member/search.json?apiKey=' + openpne.apiKey, function(json) {
     $result = $('#friendListTemplate').tmpl(json.data);
     $('#memberFriendList').html($result);
     $('#memberFriendList').show();
     $('#memberFriendListLoading').hide();
   });
-  $('#memberFriendSearch').keyup(function(){
+  $('#memberFriendSearch').keypress(function(){
     $('#memberFriendListLoading').show();
     $('#memberFriendList').hide();
     $('#memberFriendList').empty();
     var keyword = $('#memberFriendSearch').val();
-    var requestData = { target: 'friend', target_id: <?php echo $member->getId(); ?>, keyword: keyword, apiKey: openpne.apiKey };
+    var requestData = { keyword: keyword, apiKey: openpne.apiKey };
     $.getJSON( openpne.apiBase + 'member/search.json', requestData, function(json) {
       $result = $('#friendListTemplate').tmpl(json.data);
       $('#memberFriendList').html($result);
@@ -31,7 +31,7 @@ $(function(){
 
 <hr class="toumei" />
 <div class="row">
-  <div class="gadget_header span12"><?php echo __('%friend% List', array('%friend%' => $op_term['friend'])) ?></div>
+  <div class="gadget_header span12"><?php echo __('Search Members') ?></div>
 </div>
 <hr class="toumei" />
 <div class="row" id="memberFriendSearchBox">

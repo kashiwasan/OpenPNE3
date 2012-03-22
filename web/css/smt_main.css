@@ -1,3 +1,77 @@
+body {
+  margin: 0 auto;
+}
+
+label {
+  display: inline;
+}
+
+.radio_list {
+  display: inline-block;
+}
+
+.radio_list li {
+  list-style: none;
+  margin-bottom: 5px;
+}
+
+.input-prepend input[class*="span"], .input-append input[class*="span"] {
+  width: auto;
+}
+
+input[type="checkbox"], input[type="radio"] {
+  width: auto!important;
+  border: 1px solid #ccc;
+}
+
+.input-prepend .add-on, .input-append .add-on {
+  padding: 0;
+}
+
+.realtime-searchbox {
+  padding: 0px; width: 300px;
+}
+
+.form-horizontal .control-group > label {
+  float: none;
+  width: auto;
+  padding-top: 0;
+  text-align: left;
+}
+
+.form-horizontal .controls {
+  margin-left: 0;
+}
+.form-horizontal .control-list {
+  padding-top: 0;
+}
+
+.form-horizontal .form-actions {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.modal {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  right: 10px;
+  width: auto;
+  margin: 0;
+}
+
+.modal.fade.in {
+  top: auto;
+}
+.modal-header .close {
+  padding: 10px;
+  margin: -10px;
+}
+
+.carousel-caption {
+  position: static;
+}
+
 #slot_face .row {
   padding: 0 0 0 4px;
 }

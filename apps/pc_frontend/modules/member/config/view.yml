@@ -44,8 +44,11 @@ smtEditProfileSuccess:
 smtConfigSuccess:
   layout: smtLayoutHome
 
+smtSearchSuccess:
+  layout: smtLayoutSns
+
 smtConfigImageSuccess:
   layout: smtLayoutHome
 
 smtInviteSuccess:
-  layout: smtLayoutHome
+  layout: smtLayoutSns
