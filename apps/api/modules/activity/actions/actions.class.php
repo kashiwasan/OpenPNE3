@@ -187,19 +187,6 @@ class activityActions extends opJsonApiActions
     $options['source'] = 'API';
 
     $this->activity = Doctrine::getTable('ActivityData')->updateActivity($memberId, $body, $options);
-    if ($this->activity)
-    {
-      $replyActivity = Doctrine::getTable('ActivityData')->find($options['in_reply_to_activity_id']);
-      if ($replyActivity)
-      {
-        $activityMemberTo = Doctrine::getTable('Member')->find($replyActivity->getMemberId());
-        if ($activityMemberTo->getId() !== $this->getUser()->getMemberId())
-        {
-          $notifyBody = $this->getUser()->getMember()->getName() . 'さんがあなたの投稿にコメントしました。';
-          opNotificationCenter::notify($this->getUser()->getMember(), $activityMemberTo, $notifyBody, array('category' => 'other', 'url' => app_url_for('pc_frontend', 'timeline/show?id='.$replyActivity->getId())));
-        }
-      }
-    }
     $this->setTemplate('object');
   }
 
