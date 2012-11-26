@@ -639,3 +639,20 @@ ActivityImage:
     collate: utf8_unicode_ci
     charset: utf8
     comment: "Saves image information of activity"
+
+ActivityLike:
+  columns:
+    id: { type: integer(4), primary: true, autoincrement: true }
+    member_id: { type: integer(4), notnull: true  }
+    activity_data_id: { type: integer(4), notnull: true }
+  relations:
+    Member: { local: member_id, foreign: id, onDelete: cascade }
+    ActivityData: { local: activity_data_id, foreign: id, onDelete: cascade }
+  indexes:
+    activity_data_id_index:
+      fields: [activity_data_id]
+  options:
+    type: INNODB
+    collate: utf8_unicode_ci
+    charset: utf8
+    comment: "Saves activity like"

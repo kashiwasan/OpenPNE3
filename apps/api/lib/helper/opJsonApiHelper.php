@@ -65,7 +65,13 @@ function op_api_activity($activity)
   {
     $images = $activity->getImages();
   }
-
+  $like = Doctrine::getTable('ActivityLike')->findByActivityDataId($activity->getId());
+  if ($like)
+  {
+    $likeCount = $like->count();
+  }
+  $like = Doctrine::getTable('ActivityLike')->findByActivityDataIdAndMemberId($activity->getId(), $viewMemberId);
+  
   return array(
     'id' => $activity->getId(),
     'member' => op_api_member($member),
@@ -76,6 +82,8 @@ function op_api_activity($activity)
     'source_uri' => $activity->getSourceUri(),
     'image_url' => !is_null($images) ? sf_image_path($images[0]->getFile(), array('size' => '48x48'), true) : null, 
     'image_large_url' => !is_null($images) ? sf_image_path($images[0]->getFile(), array(), true) : null,
+    'like_count' => isset($likeCount) ? $likeCount : 0,
+    'already_liked' => $like[0]->getId() ? true : false,
     'created_at' => date('r', strtotime($activity->getCreatedAt())),
   );
 }
